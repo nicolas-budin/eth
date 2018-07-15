@@ -14,6 +14,8 @@ import org.web3j.quorum.Quorum;
 import reactor.core.publisher.Flux;
 import rx.RxReactiveStreams;
 
+import java.util.function.Consumer;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class EthApplicationTests {
@@ -83,6 +85,17 @@ public class EthApplicationTests {
                     logger.info("Account: " + acc);
                     Assert.assertNotNull(acc);
                 });
+            });
+
+
+            // Reactor 2
+            Flux.from(RxReactiveStreams.toPublisher(quorum.ethAccounts().observable())).subscribe(new Consumer<EthAccounts>() {
+                public void accept(EthAccounts accounts) {
+                    accounts.getAccounts().forEach(acc -> {
+                        logger.info("Account: " + acc);
+                        Assert.assertNotNull(acc);
+                    });
+                }
             });
 
 

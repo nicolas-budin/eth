@@ -5,7 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.web3j.protocol.core.methods.response.EthAccounts;
 import org.web3j.quorum.Quorum;
-
+import reactor.core.publisher.Flux;
+import rx.RxReactiveStreams;
 
 
 public class EthServiceImpl implements EthService {
@@ -16,25 +17,9 @@ public class EthServiceImpl implements EthService {
     @Autowired
     protected Quorum quorum;
 
-    /**
-     * sync method (testing purpose)
-     * @return
-     * @throws Exception
-     */
-    public int getNumbOfAccounts() throws Exception {
+    public Flux<EthAccounts> getAccounts() {
 
-        try {
-
-            EthAccounts accounts = quorum.ethAccounts().send();
-            return accounts.getAccounts().size();
-
-        } catch (Exception e) {
-
-            logger.error("Error occured", e);
-            throw e;
-
-        }
+        return Flux.from(RxReactiveStreams.toPublisher(quorum.ethAccounts().observable()));
     }
-
 
 }
