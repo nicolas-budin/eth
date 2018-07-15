@@ -63,49 +63,4 @@ public class EthApplicationTests {
 
     }
 
-
-    @Test
-    public void testRx2Reactor()  {
-
-        try {
-
-            // rxjava
-            quorum.ethAccounts().observable().subscribe(accounts -> {
-                accounts.getAccounts().forEach(acc -> {
-                    logger.info("Account: " + acc);
-                    Assert.assertNotNull(acc);
-                });
-
-            });
-
-
-            // Reactor
-            Flux.from(RxReactiveStreams.toPublisher(quorum.ethAccounts().observable())).subscribe(accounts -> {
-                accounts.getAccounts().forEach(acc -> {
-                    logger.info("Account: " + acc);
-                    Assert.assertNotNull(acc);
-                });
-            });
-
-
-            // Reactor 2
-            Flux.from(RxReactiveStreams.toPublisher(quorum.ethAccounts().observable())).subscribe(new Consumer<EthAccounts>() {
-                public void accept(EthAccounts accounts) {
-                    accounts.getAccounts().forEach(acc -> {
-                        logger.info("Account: " + acc);
-                        Assert.assertNotNull(acc);
-                    });
-                }
-            });
-
-
-        } catch (Exception e) {
-
-            logger.error("Error occured", e);
-            Assert.fail();
-
-        }
-
-    }
-
 }

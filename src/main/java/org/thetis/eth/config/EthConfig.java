@@ -23,7 +23,6 @@ public class EthConfig {
         return Web3j.build(new HttpService(nodeUrl));
     }
 
-
     @Bean(name="quorum")
     public Quorum quorum() {
         return Quorum.build(new HttpService(nodeUrl));
