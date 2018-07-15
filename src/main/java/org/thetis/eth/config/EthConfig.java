@@ -34,6 +34,4 @@ public class EthConfig {
         return new EthServiceImpl();
     }
 
-
-
 }

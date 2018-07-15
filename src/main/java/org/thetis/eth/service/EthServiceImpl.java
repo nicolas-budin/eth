@@ -16,6 +16,11 @@ public class EthServiceImpl implements EthService {
     @Autowired
     protected Quorum quorum;
 
+    /**
+     * sync method (testing purpose)
+     * @return
+     * @throws Exception
+     */
     public int getNumbOfAccounts() throws Exception {
 
         try {
