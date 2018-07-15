@@ -11,6 +11,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.EthAccounts;
 import org.web3j.quorum.Quorum;
+import reactor.core.publisher.Flux;
+import rx.RxReactiveStreams;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -25,15 +27,12 @@ public class EthApplicationTests {
     Quorum quorum;
 
 	@Test
-	public void testWeb3jNumbOfAccounts()  {
+	public void testWeb3j()  {
 
 		try {
 
-			EthAccounts accounts = web3j.ethAccounts().send();
-
-			logger.info("Accounts size: " + accounts.getAccounts().size());
-
-			accounts.getAccounts().forEach(acc -> logger.info("Account: " + acc));
+			Assert.assertNotNull(this.web3j);
+            logger.info(this.web3j.toString());
 
 		} catch (Exception e) {
 
@@ -46,15 +45,46 @@ public class EthApplicationTests {
 
 
     @Test
-    public void testQuorumjNumbOfAccounts()  {
+    public void testQuorum()  {
 
         try {
 
-            EthAccounts accounts = quorum.ethAccounts().send();
+            Assert.assertNotNull(this.quorum);
+            logger.info(this.quorum.toString());
 
-            logger.info("Accounts size: " + accounts.getAccounts().size());
+        } catch (Exception e) {
 
-            accounts.getAccounts().forEach(acc -> logger.info("Account: " + acc));
+            logger.error("Error occured", e);
+            Assert.fail();
+
+        }
+
+    }
+
+
+    @Test
+    public void testRx2Reactor()  {
+
+        try {
+
+            // rxjava
+            quorum.ethAccounts().observable().subscribe(accounts -> {
+                accounts.getAccounts().forEach(acc -> {
+                    logger.info("Account: " + acc);
+                    Assert.assertNotNull(acc);
+                });
+
+            });
+
+
+            // Reactor
+            Flux.from(RxReactiveStreams.toPublisher(quorum.ethAccounts().observable())).subscribe(accounts -> {
+                accounts.getAccounts().forEach(acc -> {
+                    logger.info("Account: " + acc);
+                    Assert.assertNotNull(acc);
+                });
+            });
+
 
         } catch (Exception e) {
 
