@@ -3,13 +3,13 @@ package org.thetis.eth.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.web3j.protocol.core.methods.response.EthAccounts;
-import org.web3j.protocol.core.methods.response.EthBlockNumber;
-import org.web3j.protocol.core.methods.response.EthTransaction;
+import org.springframework.cglib.core.Block;
+import org.web3j.protocol.core.methods.response.*;
 import org.web3j.quorum.Quorum;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import rx.RxReactiveStreams;
+import rx.Subscription;
 
 
 public class EthServiceImpl implements EthService {
@@ -32,6 +32,16 @@ public class EthServiceImpl implements EthService {
     public Mono<EthTransaction> getTransaction(String hash) {
 
         return Mono.from(RxReactiveStreams.toPublisher(quorum.ethGetTransactionByHash(hash).observable().single()));
+    }
+
+    public Flux<Transaction> getTransactions() {
+
+        return Flux.from(RxReactiveStreams.toPublisher(quorum.transactionObservable()));
+    }
+
+    public Flux<EthBlock> getBlocks() {
+
+        return Flux.from(RxReactiveStreams.toPublisher(quorum.blockObservable(false)));
     }
 
 }

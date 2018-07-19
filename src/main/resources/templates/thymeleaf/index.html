@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Eth</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+
+<body>
+
+<p><span>Current time is [[${#dates.createNow()}]]</span></p>
+
+<ul>
+    <li>Thymeleaf:
+        <ul>
+
+            <li><a th:href="@{/web/transactions}">transactions</a></li>
+        </ul>
+    </li>
+
+    <li>JSON:
+        <ul>
+            <li><a th:href="@{/json/transactions.json}">transactions json</a></li>
+        </ul>
+    </li>
+</ul>
+
+</body>
+
+</html>

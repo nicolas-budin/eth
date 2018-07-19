@@ -18,10 +18,9 @@ import java.util.function.Consumer;
 @SpringBootTest
 public class EthServiceTests {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     EthService ethService;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Test
     public void testGetAccounts() {
@@ -36,24 +35,28 @@ public class EthServiceTests {
         });
     }
 
+    @Test
+    public void testGetAccounts2() {
+
+        ethService.
+                getAccounts().
+                doOnError(e -> logger.error("Error occured", e)).
+                doOnNext(a -> logger.info("id: " + a.getId())).
+                doAfterTerminate(() -> logger.info("done")).
+                subscribe(ethAccounts -> ethAccounts.getAccounts().forEach(acc -> logger.info("Account: " + acc)));
+    }
 
     @Test
     public void testGetTransaction() {
 
         String hash = "0x46fcac081c4bdb90696c902492f4e3f494dcf31cdccb158da368d1d55ea685ba";
 
-        ethService.getTransaction(hash).subscribe(new Consumer<EthTransaction>() {
-
-            public void accept(EthTransaction ethTransaction) {
-
-                ethTransaction.getTransaction().ifPresentOrElse(t -> logger.info(t.getBlockHash()), new Runnable() {
-                    @Override
-                    public void run() {
-                        Assert.fail();
-                    }
-                });
-            }
-        });
+        ethService.
+                getTransaction(hash).
+                subscribe(ethTransaction -> ethTransaction.
+                                getTransaction().
+                                ifPresentOrElse(t -> logger.info(t.getBlockHash()),() -> logger.warn("No transaction found")),
+                        throwable -> logger.error("Failed", throwable));
     }
 
     @Test
@@ -66,5 +69,6 @@ public class EthServiceTests {
             }
         });
     }
+
 
 }

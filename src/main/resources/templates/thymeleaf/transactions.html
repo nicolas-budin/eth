@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Transactions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+
+<body>
+
+
+<table>
+    <thead>
+    <tr>
+        <th>Block Number</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="e : ${dataSource}">
+        <td th:text="${e.getBlockNumber()}">...</td>
+    </tr>
+    </tbody>
+
+</table>
+
+</body>
+
+</html>
